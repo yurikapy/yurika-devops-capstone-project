@@ -1,18 +1,13 @@
-"""
-Account API Service Test Suite
-
-Test cases can be run with the following:
-  nosetests -v --with-spec --spec-color
-  coverage report -m
-"""
 import os
 import logging
 from unittest import TestCase
+from flask import Flask
+from flask_talisman import Talisman
+from flask_cors import CORS
 from tests.factories import AccountFactory
 from service.common import status  # HTTP Status Codes
 from service.models import db, Account, init_db
 from service.routes import app
-from service import talisman
 
 DATABASE_URI = os.getenv(
     "DATABASE_URI", "postgresql://postgres:postgres@localhost:5432/postgres"
@@ -20,6 +15,10 @@ DATABASE_URI = os.getenv(
 
 BASE_URL = "/accounts"
 
+# Menambahkan Flask-Talisman untuk keamanan dan Flask-Cors untuk CORS
+app = Flask(__name__)
+talisman = Talisman(app)
+CORS(app)
 
 ######################################################################
 #  T E S T   C A S E S
@@ -43,13 +42,12 @@ class TestAccountService(TestCase):
         init_db(app)
         
         # Nonaktifkan paksa HTTPS jika menggunakan Flask-Talisman
-        talisman = Talisman(app)
         talisman.force_https = False
-      
 
     @classmethod
     def tearDownClass(cls):
-        """Runs once before test suite"""
+        """Runs once after all tests"""
+        pass
 
     def setUp(self):
         """Runs before each test"""
@@ -59,7 +57,7 @@ class TestAccountService(TestCase):
         self.client = app.test_client()
 
     def tearDown(self):
-        """Runs once after each test case"""
+        """Runs after each test case"""
         db.session.remove()
 
     ######################################################################
@@ -187,7 +185,7 @@ class TestAccountService(TestCase):
         account = self._create_accounts(1)[0]
         resp = self.client.delete(f"{BASE_URL}/{account.id}")
         self.assertEqual(resp.status_code, status.HTTP_204_NO_CONTENT)
-      
+
     # Add the new test for method not allowed
     def test_method_not_allowed(self):
         """It should not allow an illegal method call"""
@@ -196,7 +194,7 @@ class TestAccountService(TestCase):
 
     def test_security_headers(self):
         """It should return security headers"""
-        response = self.client.get('/', environ_overrides=HTTPS_ENVIRON)
+        response = self.client.get('/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         headers = {
             'X-Frame-Options': 'SAMEORIGIN',
