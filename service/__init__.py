@@ -43,4 +43,5 @@ from flask_cors import CORS  # Tambahkan ini
 app = Flask(__name__)
 
 # Aktifkan CORS untuk aplikasi Flask
-CORS(app)
+CORSCORS(app, resources={r"/accounts/*": {"origins": "*"}})
+
