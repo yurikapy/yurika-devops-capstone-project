@@ -1,0 +1,16 @@
+name: CI Build
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # Menjalankan job di runner Ubuntu terbaru
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
