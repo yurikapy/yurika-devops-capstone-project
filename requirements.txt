@@ -29,5 +29,6 @@ coverage==6.3.2
 httpie==3.2.1
 
 # Flask extensions
-Flask-Talisman==2.1.0
-Flask-Cors==3.1.1
+Flask==2.0.1
+Flask-SQLAlchemy==2.5.1
+Flask-Cors==3.1.1 
