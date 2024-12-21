@@ -30,11 +30,22 @@ class TestAccountService(TestCase):
     @classmethod
     def setUpClass(cls):
         """Run once before all tests"""
+        
+        # Konfigurasi aplikasi Flask untuk pengujian
         app.config["TESTING"] = True
         app.config["DEBUG"] = False
         app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URI
+        
+        # Mengatur tingkat log untuk aplikasi
         app.logger.setLevel(logging.CRITICAL)
+        
+        # Inisialisasi database
         init_db(app)
+        
+        # Nonaktifkan paksa HTTPS jika menggunakan Flask-Talisman
+        talisman = Talisman(app)
+        talisman.force_https = False
+      
 
     @classmethod
     def tearDownClass(cls):
