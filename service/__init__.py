@@ -38,14 +38,4 @@ app.logger.info("Service initialized!")
 
 from flask_talisman import Talisman
 from flask_cors import CORS
-# Inisialisasi aplikasi Flask
-app = Flask(__name__)
-
-# Menambahkan Flask-Talisman untuk keamanan
-talisman = Talisman(app)
-
-# Menambahkan Flask-Cors
-CORS(app)
-if __name__ == "__main__":
-    app.run(debug=True)
 
