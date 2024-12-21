@@ -9,6 +9,19 @@ on:
       - main
 jobs:
   build:
-    runs-on: ubuntu-latest  # Menjalankan job di runner dengan Ubuntu terbaru
+    runs-on: ubuntu-latest  # Menjalankan job di runner Ubuntu terbaru
     container:
-      image: python:3.9-slim  # Menjalankan job di dalam Docker container dengan image Python 3.9-slim
+      image: python:3.9-slim  # Menjalankan job di dalam Docker container dengan image Python 3.9
+    services:
+      postgres:
+        image: postgres:alpine  # Menentukan image untuk Postgres
+        ports:
+          - 5432:5432  # Memetakan port 5432 di container ke port 5432 di host
+        env:
+          POSTGRES_PASSWORD: pgs3cr3t  # Menentukan password untuk Postgres
+          POSTGRES_DB: testdb  # Menentukan nama database default
+        options: >-
+          --health-cmd pg_isready  # Perintah untuk memeriksa kesehatan PostgreSQL
+          --health-interval 10s  # Memeriksa kesehatan setiap 10 detik
+          --health-timeout 5s  # Memiliki waktu tunggu 5 detik untuk pemeriksaan kesehatan
+          --health-retries 5  # Menentukan jumlah upaya untuk memeriksa kesehatan
