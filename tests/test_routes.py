@@ -123,46 +123,29 @@ class TestAccountService(TestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
 
- import unittest
-from your_application import app  # Pastikan aplikasi Anda terhubung dengan benar
-
-class TestAccountRoutes(unittest.TestCase):
-
-    def setUp(self):
-        # Setup untuk test client, digunakan untuk melakukan request HTTP
-        self.client = app.test_client()
-
-    def test_read_an_account(self):
-        # Data akun yang akan dikirim saat membuat akun baru
+  def test_read_an_account(self):
         account_data = {
             "name": "John Doe",
             "email": "john.doe@example.com",
             "balance": 1000
         }
         
-        # Membuat akun baru dengan POST request
-        response = self.client.post('/accounts', json=account_data)
+        # Create a new account
+        response = self.client.post(BASE_URL, json=account_data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-        # Pastikan status code adalah HTTP_201_CREATED, yang berarti akun berhasil dibuat
-        self.assertEqual(response.status_code, 201)
-
-        # Ambil ID akun yang baru dibuat dari response JSON
         account_id = response.get_json()['id']
 
-        # Gunakan ID tersebut untuk mengambil data akun dengan GET request
-        response = self.client.get(f'/accounts/{account_id}')
+        # Retrieve the account
+        response = self.client.get(f"{BASE_URL}/{account_id}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        # Pastikan status code adalah HTTP_200_OK
-        self.assertEqual(response.status_code, 200)
-
-        # Ambil data JSON yang dikembalikan
         data = response.get_json()
 
-        # Pastikan data yang dikembalikan sesuai dengan data yang dikirimkan saat membuat akun
+        # Verify the returned data
         self.assertEqual(data["name"], account_data["name"])
         self.assertEqual(data["email"], account_data["email"])
         self.assertEqual(data["balance"], account_data["balance"])
 
 if __name__ == '__main__':
     unittest.main()
-
